@@ -19,9 +19,13 @@ int main()
         std::stringstream ss(command);
         std::string keyword;
         std::string argument;
+
         ss >> keyword;
         ss >> argument;
 
+
+        
+        
 
         if (keyword == "HELP")
         {
@@ -32,6 +36,22 @@ int main()
 
         else if (keyword == "CREATE")
         {
+            std::string schema;
+            std::getline(ss, schema);
+            schema.erase(0, schema.find_first_not_of(" \t"));
+
+            schema.erase(0, 1);
+            schema.pop_back();
+
+            std::stringstream schemaStream(schema);
+            std::string column;
+            while (std::getline(schemaStream, column, ','))
+            {
+                column.erase(0, column.find_first_not_of(" \t"));
+                std::cout << "\n Column: " << column;
+            }
+
+
             if (argument.empty())
             {
                 std::cout << "\nUsage: CREATE <filename>";
@@ -62,8 +82,8 @@ int main()
                     }
                 }
             }
-
-            
+            std::cout << "\ndatabase: " << argument;
+            std::cout << "\nschema: " << schema;
         }
 
         else if (keyword == "EXIT")
