@@ -1,5 +1,7 @@
 #include <iostream>
-#include <sstream>
+#include <sstream>      // command & argument
+#include <fstream>      // file handling
+#include <filesystem>   // file check
 #include <string>
 
 int main()
@@ -26,6 +28,42 @@ int main()
             std::cout << "\n" << "HashQL commands: ";
             std::cout << "\n" << "  HELP";
             std::cout << "\n" << "  EXIT";
+        }
+
+        else if (keyword == "CREATE")
+        {
+            if (argument.empty())
+            {
+                std::cout << "\nUsage: CREATE <filename>";
+            }
+            
+            else
+            {
+                std::string filename = "data/" + argument + ".csv";
+
+                if (std::filesystem::exists(filename))
+                {
+                    std::cout << "\nDatabase '" << argument << "' already exists.";
+                }
+
+                else
+                {
+                    std::ofstream file(filename);
+
+                    if (file.is_open())
+                    {
+                        std::cout << "\nDatabase '" << argument << "' created successfully.";
+                        file.close();
+                    }
+
+                    else
+                    {
+                        std::cout << "\nFailed to create database.";
+                    }
+                }
+            }
+
+            
         }
 
         else if (keyword == "EXIT")
