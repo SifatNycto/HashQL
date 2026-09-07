@@ -23,10 +23,6 @@ int main()
         ss >> keyword;
         ss >> argument;
 
-
-        
-        
-
         if (keyword == "HELP")
         {
             std::cout << "\n" << "HashQL commands: ";
@@ -45,10 +41,18 @@ int main()
 
             std::stringstream schemaStream(schema);
             std::string column;
+
             while (std::getline(schemaStream, column, ','))
             {
                 column.erase(0, column.find_first_not_of(" \t"));
-                std::cout << "\n Column: " << column;
+                
+                std::stringstream columnStream(column);
+
+                std::string columnName;
+                std::string columnType;
+
+                columnStream >> columnName;
+                columnStream >> columnType;
             }
 
 
