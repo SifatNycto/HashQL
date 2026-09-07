@@ -41,6 +41,7 @@ EXIT
 - STL
 - Data Structures
 - Object-Oriented Programming
+- Dynamic Modular Programming
 
 ## Status
 > 🚧 Currently under development.
