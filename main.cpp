@@ -40,15 +40,19 @@ int main()
 
         else if (keyword == "CREATE")
         {
+            bool validSchema = true;
+
             std::string schema;
             std::getline(ss, schema);
 
 
             schema.erase(0, schema.find_first_not_of(" \t"));
 
+            // Missing Schema
             if (schema.empty())
             {
                 std::cout << "\nError: Schema is required here.";
+                validSchema = false; // 1
             }
             else
             {
@@ -57,9 +61,11 @@ int main()
                     schema.erase(0, 1);
                     schema.pop_back();
 
+                    // Empty Schema
                     if (schema.empty())
                     {
                         std::cout << "\nError: Schema cannot be empty.";
+                        validSchema = false; // 2
                     }
                     else
                     {
@@ -84,11 +90,13 @@ int main()
                             if (columnName.empty() || columnType.empty())
                             {
                                 std::cout << "\nError: Each column must have a name and a type.";
+                                validSchema = false; // 3
                             }
 
                             if (columnType != "TEXT" && columnType != "INTEGER" && columnType != "REAL")
                             {
                                 std::cout << "\nError: Unsupported data type.";
+                                validSchema = false; // 4
                             }
 
 
@@ -103,13 +111,18 @@ int main()
                 else
                 {
                     std::cout << "\nError: Schema must be enclosed in parenthesis.";
+                    validSchema = false; // 5
                 }
             }
 
            
 
+            if (!validSchema)
+            {
+                std::cout << "\nError: no CSV created!";
+            }
 
-            if (argument.empty())
+            else if (argument.empty())
             {
                 std::cout << "\nUsage: CREATE <filename>";
             }
