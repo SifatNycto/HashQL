@@ -44,24 +44,30 @@ int main()
             }
             else
             {
-                schema.erase(0, 1);
-                schema.pop_back();
-
-
-                 std::stringstream schemaStream(schema);
-                std::string column;
-
-                while (std::getline(schemaStream, column, ','))
+                if (schema.front() == '(' && schema.back() == ')')
                 {
-                    column.erase(0, column.find_first_not_of(" \t"));
-                    
-                    std::stringstream columnStream(column);
+                    schema.erase(0, 1);
+                    schema.pop_back();
 
-                    std::string columnName;
-                    std::string columnType;
+                    std::stringstream schemaStream(schema);
+                    std::string column;
 
-                    columnStream >> columnName;
-                    columnStream >> columnType;
+                    while (std::getline(schemaStream, column, ','))
+                    {
+                        column.erase(0, column.find_first_not_of(" \t"));
+                        
+                        std::stringstream columnStream(column);
+
+                        std::string columnName;
+                        std::string columnType;
+
+                        columnStream >> columnName;
+                        columnStream >> columnType;
+                    }
+                }
+                else
+                {
+                    std::cout << "\nError: Schema must be enclosed in parenthesis.";
                 }
             }
 
