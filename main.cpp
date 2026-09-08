@@ -41,6 +41,7 @@ int main()
         else if (keyword == "CREATE")
         {
             bool validSchema = true;
+            std::vector<Column> columns;
 
             std::string schema;
             std::getline(ss, schema);
@@ -71,8 +72,6 @@ int main()
                     {
                         std::stringstream schemaStream(schema);
                         std::string column;
-
-                        std::vector<Column> columns;
 
                         
                         while (std::getline(schemaStream, column, ','))
@@ -143,7 +142,35 @@ int main()
                     if (file.is_open())
                     {
                         std::cout << "\nDatabase '" << argument << "' created successfully.";
+                        for (size_t i = 0; i < columns.size(); i++)
+                        {
+                            file << columns[i].name;
+                            if (i < columns.size() - 1)
+                            {
+                                file << ",";
+                            }
+                        }
+
+                        file << "\n";
                         file.close();
+
+                        std::string schemaFileName = "data/" + argument + ".schema";
+                        std::ofstream schemaFile(schemaFileName);
+
+                        if (schemaFile.is_open())
+                        {
+                            for (size_t i = 0; i < columns.size(); i++)
+                            {
+                                schemaFile << columns[i].name << " " << columns[i].type << "\n";
+                            }
+
+                            schemaFile.close();
+                        }
+                        else
+                        {
+                            std::cout << "\nFailed to create schema file.";
+                        }
+                        
                     }
 
                     else
