@@ -57,7 +57,7 @@ int main()
                     {
                         std::stringstream schemaStream(schema);
                         std::string column;
-
+                        
                         while (std::getline(schemaStream, column, ','))
                         {
                             column.erase(0, column.find_first_not_of(" \t"));
@@ -73,6 +73,11 @@ int main()
                             if (columnName.empty() || columnType.empty())
                             {
                                 std::cout << "\nError: Each column must have a name and a type.";
+                            }
+
+                            if (columnType != "TEXT" && columnType != "INTEGER" && columnType != "REAL")
+                            {
+                                std::cout << "\nError: Unsupported data type.";
                             }
                         }
                     }
