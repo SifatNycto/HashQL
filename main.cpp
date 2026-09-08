@@ -3,6 +3,14 @@
 #include <fstream>      // file handling
 #include <filesystem>   // file check
 #include <string>
+#include <vector>
+
+
+struct Column
+{
+    std::string name;
+    std::string type;
+};
 
 int main()
 {
@@ -57,6 +65,9 @@ int main()
                     {
                         std::stringstream schemaStream(schema);
                         std::string column;
+
+                        std::vector<Column> columns;
+
                         
                         while (std::getline(schemaStream, column, ','))
                         {
@@ -79,6 +90,13 @@ int main()
                             {
                                 std::cout << "\nError: Unsupported data type.";
                             }
+
+
+                            Column currentColumn;
+                            currentColumn.name = columnName;
+                            currentColumn.type = columnType;
+
+                            columns.push_back(currentColumn);
                         }
                     }
                 }
