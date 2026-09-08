@@ -49,21 +49,30 @@ int main()
                     schema.erase(0, 1);
                     schema.pop_back();
 
-                    std::stringstream schemaStream(schema);
-                    std::string column;
-
-                    while (std::getline(schemaStream, column, ','))
+                    if (schema.empty())
                     {
-                        column.erase(0, column.find_first_not_of(" \t"));
-                        
-                        std::stringstream columnStream(column);
-
-                        std::string columnName;
-                        std::string columnType;
-
-                        columnStream >> columnName;
-                        columnStream >> columnType;
+                        std::cout << "\nError: Schema cannot be empty.";
                     }
+                    else
+                    {
+                        std::stringstream schemaStream(schema);
+                        std::string column;
+
+                        while (std::getline(schemaStream, column, ','))
+                        {
+                            column.erase(0, column.find_first_not_of(" \t"));
+                            
+                            std::stringstream columnStream(column);
+
+                            std::string columnName;
+                            std::string columnType;
+
+                            columnStream >> columnName;
+                            columnStream >> columnType;
+                        }
+                    }
+
+                    
                 }
                 else
                 {
