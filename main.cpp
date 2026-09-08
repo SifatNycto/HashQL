@@ -69,10 +69,13 @@ int main()
 
                             columnStream >> columnName;
                             columnStream >> columnType;
+
+                            if (columnName.empty() || columnType.empty())
+                            {
+                                std::cout << "\nError: Each column must have a name and a type.";
+                            }
                         }
                     }
-
-                    
                 }
                 else
                 {
