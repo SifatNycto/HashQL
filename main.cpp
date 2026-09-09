@@ -12,6 +12,11 @@ struct Column
     std::string type;
 };
 
+struct Record
+{
+    std::vector<std::string> values;
+};
+
 int main()
 {
     std::string command;
@@ -31,13 +36,91 @@ int main()
         ss >> keyword;
         ss >> argument;
 
-        if (keyword == "HELP")
+        // ADD block.............
+        if (keyword == "ADD")
+        {
+            std::string schemaFileName = "data/" + argument + ".schema";
+
+            std::ifstream schemaFile(schemaFileName);
+
+            if (!schemaFile.is_open())
+            {
+                std::cout << "\nFailed to open schema file.";
+            }
+            else
+            {
+                std::string line;
+                std::vector<Column> columns;
+
+                while (std::getline(schemaFile, line))
+                {
+                    std::stringstream columnStream(line);
+                    
+                    std::string columnName;
+                    std::string columnType;
+
+                    columnStream >> columnName;
+                    columnStream >> columnType;
+
+                    Column currentColumn;
+                    currentColumn.name = columnName;
+                    currentColumn.type = columnType;
+
+                    columns.push_back(currentColumn);
+                }
+
+                schemaFile.close();
+
+                std::cout << "\nDatabase '" << argument << "' loaded.";
+
+                Record record;
+
+                for (size_t i = 0; i < columns.size(); i++)
+                {
+                    std::string value;
+                    std::cout << "\nEnter " << columns[i].name << ": ";
+                    std::getline(std::cin, value);
+                    record.values.push_back(value);
+                }
+
+                std::string filename = "data/" + argument + ".csv";
+                std::ofstream file(filename, std::ios::app);
+
+                if (!file.is_open())
+                {
+                    std::cout << "\nFailed to open database file.";
+                }
+                else
+                {
+                    for (size_t i = 0; i < columns.size(); i++)
+                    {
+                        file << record.values[i];
+                        if (i < columns.size() - 1)
+                        {
+                            file << ",";
+                        }
+                    }
+
+                    file << "\n";
+                    file.close();
+
+                    std::cout << "\nRecord added successfully.";
+                }
+                
+             
+            }
+        }
+
+
+        // HELP bolck.......................
+        else if (keyword == "HELP")
         {
             std::cout << "\n" << "HashQL commands: ";
             std::cout << "\n" << "  HELP";
             std::cout << "\n" << "  EXIT";
         }
 
+        // CREATE block....................
         else if (keyword == "CREATE")
         {
             bool validSchema = true;
@@ -183,6 +266,7 @@ int main()
             std::cout << "\nschema: " << schema;
         }
 
+        // EXIT block..................
         else if (keyword == "EXIT")
         {
             std::cout << "\n" << "Goodbye!";
