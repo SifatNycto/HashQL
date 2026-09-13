@@ -1,2 +1,2 @@
-id INTEGER
 name TEXT
+contact INTEGER
