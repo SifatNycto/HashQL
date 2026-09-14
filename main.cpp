@@ -4,7 +4,7 @@
 #include <filesystem>   // file check
 #include <string>
 #include <vector>
-#include <iomanip>
+#include <iomanip>      // white space manipulation
 
 
 struct Column
@@ -33,11 +33,12 @@ int main()
         std::stringstream ss(command);
         std::string keyword;
         std::string argument;
+        std::string searchValue;
 
         ss >> keyword;
         ss >> argument;
+        ss >> searchValue;
 
-        
 
 // CREATE block....................
         if (keyword == "CREATE")
@@ -338,16 +339,79 @@ int main()
             }
         }
 
+
+// SEARCH block................................ 
+        else if (keyword == "SEARCH")
+        {
+            if (argument.empty() || searchValue.empty())
+            {
+                std::cout << "\nUsage: SEARCH <filename> <value>";
+            }
+            else
+            {
+                std::string fileName = "data/" + argument + ".csv";
+                std::ifstream file(fileName);
+
+                if (!file.is_open())
+                {
+                    std::cout << "\nError: Can't load database or data ase doesn't exist";
+                }
+                else
+                {
+                    std::string line;
+
+                    std::getline(file, line);
+
+                    bool found = false;
+
+                    while (std::getline(file, line))
+                    {
+                        std::stringstream rowStream(line);
+                        std::string value;
+
+                        Record record;
+
+                        while (std::getline(rowStream, value, ','))
+                        {
+                            record.values.push_back(value);
+                        }
+
+                        if (!record.values.empty() && record.values[0] == searchValue)
+                        {
+                            found = true;
+                            std::cout << "\nFound: ";
+
+                            for (size_t i = 0; i < record.values.size(); i++)
+                            {
+                                std::cout << std::left << std::setw(12) << record.values[i];
+                            }
+                            std::cout << "\n";
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        std::cout << "\nRecord not found.";
+                    }
+
+                    file.close();
+                }
+
+            }
+
+        }
         
+
 // HELP block.......................
         else if (keyword == "HELP")
         {
             std::cout << "\n" << "HashQL commands: ";
-            std::cout << "\n" << "  CREATE";
-            std::cout << "\n" << "  ADD";
-            std::cout << "\n" << "  SHOW";
-            std::cout << "\n" << "  HELP";
-            std::cout << "\n" << "  EXIT";
+            std::cout << "\n" << ">> CREATE";
+            std::cout << "\n" << ">> ADD";
+            std::cout << "\n" << ">> SHOW";
+            std::cout << "\n" << ">> SEARCH";
+            std::cout << "\n" << ">> HELP";
+            std::cout << "\n" << ">> EXIT";
         }
 
         
@@ -358,12 +422,12 @@ int main()
             break;
         }
 
+// Invalid things...................        
         else
         {
             std::cout << "\n " << "Unknown command. Type HELP.";
         }
     }
-
 
     return 0;
 }
