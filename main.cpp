@@ -263,6 +263,113 @@ int main()
         }
 
 
+// UPDATE block...........................
+        else if (keyword == "UPDATE")
+        {
+            if (argument.empty() || searchValue.empty())
+            {
+                std::cout << "\nUsage: UPDATE <filename> <id>";
+            }
+            else
+            {
+                std::string fileName = "data/" + argument + ".csv";
+                std::ifstream file(fileName);
+
+                if (!file.is_open())
+                {
+                    std::cout << "\nError: Database doesn't exist.";
+                }
+                else
+                {
+                    std::string line;
+                    std::string header;
+
+                    std::getline(file, header);
+                    
+                    std::vector<Record> records;
+
+                    while (std::getline(file, line))
+                    {
+                        std::stringstream rowStream(line);
+                        std::string value;
+
+                        Record record;
+
+                        while (std::getline(rowStream, value, ','))
+                        {
+                            record.values.push_back(value);
+                        }
+
+                        records.push_back(record);
+                    }
+
+                    file.close();
+
+                    bool found = false;
+
+                    for (size_t i = 0; i < records.size(); i++)
+                    {
+                        if (!records[i].values.empty() && records[i].values[0] == searchValue)
+                        {
+                            found = true;
+                            // std::cout << "\nRecord found!";
+                            // break;
+
+                            for (size_t j = 0; j < records[i].values.size(); j++)
+                            {
+                                std::string value;
+                                
+                                std::cout << "\nEnter new value for field " << j+1 << ": ";
+                                std::getline(std::cin, value);
+
+                                records[i].values[j] = value;
+                            }
+
+
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        std::cout << "\nRecord not found.";
+                    }
+                    else
+                    {
+                        std::ofstream output(fileName);
+
+                        if (!output.is_open())
+                        {
+                            std::cout << "\nFailed to save database.";
+                        }
+                        else
+                        {
+                            output << header << "\n";
+
+                            for (size_t i = 0; i < records.size(); i++)
+                            {
+                                for (size_t j = 0; j < records[i].values.size(); j++)
+                                {
+                                    output << records[i].values[j];
+
+                                    if (j < records[i].values.size() - 1)
+                                    {
+                                        output << ",";
+                                    }
+                                }
+
+                                output << "\n";
+                            }
+
+                            std::cout << "\nRecord updated successfully.";
+                            output.close();
+                        }
+                    }
+                }
+            }
+        }        
+
+
 // SHOW block...................
         else if (keyword == "SHOW")
         {
@@ -408,6 +515,7 @@ int main()
             std::cout << "\n" << "HashQL commands: ";
             std::cout << "\n" << ">> CREATE";
             std::cout << "\n" << ">> ADD";
+            std::cout << "\n" << ">> UPDATE";
             std::cout << "\n" << ">> SHOW";
             std::cout << "\n" << ">> SEARCH";
             std::cout << "\n" << ">> HELP";
