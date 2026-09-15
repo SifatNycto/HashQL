@@ -251,7 +251,7 @@ std::vector<Record>
 
 Key C++ components used include:
 
-```text
+```cpp
 iostream
 sstream
 fstream
@@ -267,7 +267,7 @@ iomanip
 
 A typical HashQL session:
 
-```text
+```bash
 HashQL Database
 Type HELP for available commands.
 
