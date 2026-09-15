@@ -37,7 +37,6 @@ int main()
 
         ss >> keyword;
         ss >> argument;
-        ss >> searchValue;
 
 
 // CREATE block....................
@@ -266,6 +265,8 @@ int main()
 // UPDATE block...........................
         else if (keyword == "UPDATE")
         {
+            ss >> searchValue;
+
             if (argument.empty() || searchValue.empty())
             {
                 std::cout << "\nUsage: UPDATE <filename> <id>";
@@ -450,6 +451,8 @@ int main()
 // SEARCH block................................ 
         else if (keyword == "SEARCH")
         {
+            ss >> searchValue;
+
             if (argument.empty() || searchValue.empty())
             {
                 std::cout << "\nUsage: SEARCH <filename> <value>";
